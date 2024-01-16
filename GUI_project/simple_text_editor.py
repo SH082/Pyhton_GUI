@@ -11,6 +11,15 @@ class SimpleNotepad:
         self.text = tk.Text(self.master, wrap="word", undo=True)
         self.text.pack(expand=True, fill="both")
 
+        # 글자 크기를 조절할 스핀박스 추가
+        self.font_size_var = tk.StringVar()
+        self.font_size_var.set("12")  # 초기값 설정
+        self.font_size_label = tk.Label(self.master, text="글자 크기:")
+        self.font_size_label.pack(side=tk.LEFT, padx=5)
+        self.font_size_spinbox = tk.Spinbox(self.master, from_=8, to=32, textvariable=self.font_size_var, width=5)
+        self.font_size_spinbox.pack(side=tk.LEFT, padx=5)
+        self.font_size_spinbox.bind("<Return>", self.change_font_size)
+
         # 메뉴바 생성
         self.menu_bar = tk.Menu(self.master)
         self.master.config(menu=self.menu_bar)
@@ -41,6 +50,13 @@ class SimpleNotepad:
             with open(file_path, "w") as file:
                 content = self.text.get(1.0, tk.END)
                 file.write(content)
+
+    def change_font_size(self, event):
+        try:
+            font_size = int(self.font_size_var.get())
+            self.text.configure(font=("TkDefaultFont", font_size))
+        except ValueError:
+            pass  # 정수로 변환할 수 없는 경우 무시
 
 if __name__ == "__main__":
     root = tk.Tk()
